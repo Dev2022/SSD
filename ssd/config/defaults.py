@@ -65,7 +65,7 @@ _C.DATASETS.TEST = ()
 # -----------------------------------------------------------------------------
 _C.DATA_LOADER = CN()
 # Number of data loading threads
-_C.DATA_LOADER.NUM_WORKERS = 8
+_C.DATA_LOADER.NUM_WORKERS = 1
 _C.DATA_LOADER.PIN_MEMORY = True
 
 # ---------------------------------------------------------------------------- #
@@ -76,7 +76,7 @@ _C.SOLVER = CN()
 _C.SOLVER.MAX_ITER = 120000
 _C.SOLVER.LR_STEPS = [80000, 100000]
 _C.SOLVER.GAMMA = 0.1
-_C.SOLVER.BATCH_SIZE = 32
+_C.SOLVER.BATCH_SIZE = 1
 _C.SOLVER.LR = 1e-3
 _C.SOLVER.MOMENTUM = 0.9
 _C.SOLVER.WEIGHT_DECAY = 5e-4
@@ -88,9 +88,9 @@ _C.SOLVER.WARMUP_ITERS = 500
 # ---------------------------------------------------------------------------- #
 _C.TEST = CN()
 _C.TEST.NMS_THRESHOLD = 0.45
-_C.TEST.CONFIDENCE_THRESHOLD = 0.01
+_C.TEST.CONFIDENCE_THRESHOLD = 0.005
 _C.TEST.MAX_PER_CLASS = -1
-_C.TEST.MAX_PER_IMAGE = 100
-_C.TEST.BATCH_SIZE = 10
+_C.TEST.MAX_PER_IMAGE = 300
+_C.TEST.BATCH_SIZE = 1
 
 _C.OUTPUT_DIR = 'outputs'

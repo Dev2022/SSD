@@ -20,6 +20,7 @@ class SSDBoxHead(nn.Module):
         self.priors = None
 
     def forward(self, features, targets=None):
+        
         cls_logits, bbox_pred = self.predictor(features)
         if self.training:
             return self._forward_train(cls_logits, bbox_pred, targets)
@@ -27,6 +28,7 @@ class SSDBoxHead(nn.Module):
             return self._forward_test(cls_logits, bbox_pred)
 
     def _forward_train(self, cls_logits, bbox_pred, targets):
+        
         gt_boxes, gt_labels = targets['boxes'], targets['labels']
         reg_loss, cls_loss = self.loss_evaluator(cls_logits, bbox_pred, gt_labels, gt_boxes)
         loss_dict = dict(

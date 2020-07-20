@@ -5,22 +5,24 @@ MODEL:
   PRIORS:
     FEATURE_MAPS: [64, 32, 16, 8, 4, 2, 1]
     STRIDES: [8, 16, 32, 64, 128, 256, 512]
-    #MIN_SIZES: [20, 51, 133, 215, 296, 378, 460]
-    #MAX_SIZES: [51, 133, 215, 296, 378, 460, 542]
-    MIN_SIZES: [35.84, 76.8, 153.6, 230.4, 307.2, 384.0, 460.8]
-    MAX_SIZES: [76.8, 153.6, 230.4, 307.2, 384.0, 460.8, 537.65]
+#    MIN_SIZES: [35.84, 76.8, 153.6, 230.4, 307.2, 384.0, 460.8]
+#   MAX_SIZES: [76.8, 153.6, 230.4, 307.2, 384.0, 460.8, 537.65]
+
+    MIN_SIZES: [20, 51, 133, 215, 296, 378, 460]
+    MAX_SIZES: [51, 133, 215, 296, 378, 460, 542]
+
     ASPECT_RATIOS: [[2], [2, 3], [2, 3], [2, 3], [2, 3], [2], [2]]
     BOXES_PER_LOCATION: [4, 6, 6, 6, 6, 4, 4]
 INPUT:
   IMAGE_SIZE: 512
 DATASETS:
-  TRAIN: ("voc_2007_trainval", "voc_2012_trainval")
+  TRAIN: ("voc_2007_train",)
   TEST: ("voc_2007_test", )
 SOLVER:
-  MAX_ITER: 120000
-  LR_STEPS: [80000, 100000]
+  MAX_ITER: 70000
+  LR_STEPS: [40000, 50000]
   GAMMA: 0.1
   BATCH_SIZE: 1
   LR: 1e-3
 
-OUTPUT_DIR: 'outputs/vgg_ssd512_voc0712'
+OUTPUT_DIR: 'outputs/vgg_ssd512_voc07_v1'

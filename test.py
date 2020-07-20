@@ -12,6 +12,7 @@ from ssd.utils import dist_util
 from ssd.utils.checkpoint import CheckPointer
 from ssd.utils.dist_util import synchronize
 from ssd.utils.logger import setup_logger
+from ssd.utils.timer import Timer
 
 
 def evaluation(cfg, ckpt, distributed):
@@ -82,3 +83,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    

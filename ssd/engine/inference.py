@@ -10,6 +10,7 @@ from ssd.data.datasets.evaluation import evaluate
 
 from ssd.utils import dist_util, mkdir
 from ssd.utils.dist_util import synchronize, is_main_process
+from ssd.utils.timer import Timer
 
 
 def _accumulate_predictions_from_multiple_gpus(predictions_per_gpu):
@@ -37,6 +38,7 @@ def _accumulate_predictions_from_multiple_gpus(predictions_per_gpu):
 def compute_on_dataset(model, data_loader, device):
     results_dict = {}
     for batch in tqdm(data_loader):
+        
         images, targets, image_ids = batch
         cpu_device = torch.device("cpu")
         with torch.no_grad():
@@ -52,11 +54,15 @@ def compute_on_dataset(model, data_loader, device):
 def inference(model, data_loader, dataset_name, device, output_folder=None, use_cached=False, **kwargs):
     dataset = data_loader.dataset
     logger = logging.getLogger("SSD.inference")
-    logger.info("Evaluating {} dataset({} images):".format(dataset_name, len(dataset)))
+    #logger.info("Evaluating {} dataset({} images):".format(dataset_name, len(dataset)))
+    timer = Timer()
+    timer.tic()
     predictions_path = os.path.join(output_folder, 'predictions.pth')
     if use_cached and os.path.exists(predictions_path):
+
         predictions = torch.load(predictions_path, map_location='cpu')
     else:
+
         predictions = compute_on_dataset(model, data_loader, device)
         synchronize()
         predictions = _accumulate_predictions_from_multiple_gpus(predictions)
@@ -64,6 +70,7 @@ def inference(model, data_loader, dataset_name, device, output_folder=None, use_
         return
     if output_folder:
         torch.save(predictions, predictions_path)
+    print("\nTotal detection speed: %.1f FPS" % (4952/timer.toc()))
     return evaluate(dataset=dataset, predictions=predictions, output_dir=output_folder, **kwargs)
 
 
@@ -75,10 +82,14 @@ def do_evaluation(cfg, model, distributed, **kwargs):
     device = torch.device(cfg.MODEL.DEVICE)
     data_loaders_val = make_data_loader(cfg, is_train=False, distributed=distributed)
     eval_results = []
+    timer = Timer()
+    timer.tic()
     for dataset_name, data_loader in zip(cfg.DATASETS.TEST, data_loaders_val):
         output_folder = os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
         if not os.path.exists(output_folder):
             mkdir(output_folder)
+            
         eval_result = inference(model, data_loader, dataset_name, device, output_folder, **kwargs)
         eval_results.append(eval_result)
+    print("\nTotal detection speed1: %.1f FPS" % (4952/timer.toc()))
     return eval_results

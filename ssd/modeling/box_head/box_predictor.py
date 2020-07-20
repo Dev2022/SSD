@@ -44,6 +44,7 @@ class BoxPredictor(nn.Module):
 
 @registry.BOX_PREDICTORS.register('SSDBoxPredictor')
 class SSDBoxPredictor(BoxPredictor):
+    
     def cls_block(self, level, out_channels, boxes_per_location):
         return nn.Conv2d(out_channels, boxes_per_location * self.cfg.MODEL.NUM_CLASSES, kernel_size=3, stride=1, padding=1)
 
